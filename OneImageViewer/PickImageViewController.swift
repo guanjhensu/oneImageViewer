@@ -44,10 +44,11 @@ class PickImageViewController: UIViewController, UIScrollViewDelegate, UINavigat
         pickImageBtn.addShadowToView(alpha: 0.25, offsetWidth: 0, offsetHeight: 2, radius: 4)
         
         scrollView.delegate = self
-        
-        scrollView.minimumZoomScale = 0.5
 
+        scrollView.minimumZoomScale = 0.1
+        
         scrollView.maximumZoomScale = 6.0
+
     }
 
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
@@ -61,14 +62,15 @@ class PickImageViewController: UIViewController, UIScrollViewDelegate, UINavigat
         
             imageView.image = image
             
-            imageView.isHidden = false
+            showPickedImage(imageView: imageView)
+
         
         } else if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
             
             imageView.image = image
             
-            imageView.isHidden = false
-        
+            showPickedImage(imageView: imageView)
+
         } else {
             
             print("Something went wrong with photo you choose")
@@ -78,4 +80,51 @@ class PickImageViewController: UIViewController, UIScrollViewDelegate, UINavigat
         
         self.dismiss(animated: true, completion: nil)
     }
+
+    func showPickedImage(imageView: UIImageView){
+        
+        imageView.isHidden = false
+        
+        let scaleWidth = scrollView.frame.size.width / (imageView.image?.size.width)!
+        
+        let scaleHeight = scrollView.frame.size.height / (imageView.image?.size.height)!
+        
+        let minScale = min(scaleHeight, scaleWidth)
+
+        scrollView.zoomScale = minScale
+        
+        scrollView.contentInset.top = 40
+        
+        scrollView.contentInset.left = 0
+    
+    }
+
+    // keep image center after zooming
+    func scrollViewDidZoom(_ scrollView: UIScrollView) {
+
+        if imageView.frame.height <= scrollView.frame.height {
+            
+            let shiftHeight = scrollView.frame.height/2.0 - scrollView.contentSize.height/2.0
+            
+            scrollView.contentInset.top = shiftHeight
+
+        } else {
+
+            scrollView.contentInset.top = 0
+
+        }
+        if imageView.frame.width <= scrollView.frame.width {
+            
+            let shiftWidth = scrollView.frame.width/2.0 - scrollView.contentSize.width/2.0
+            
+            scrollView.contentInset.left = shiftWidth
+
+        } else {
+
+            scrollView.contentInset.top = 0
+
+        }
+    }
+    
+
 }
