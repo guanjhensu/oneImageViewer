@@ -45,7 +45,7 @@ class PickImageViewController: UIViewController, UIScrollViewDelegate, UINavigat
         
         scrollView.delegate = self
 
-        scrollView.minimumZoomScale = 0.1
+        scrollView.minimumZoomScale = 0.01
         
         scrollView.maximumZoomScale = 6.0
 
@@ -82,9 +82,7 @@ class PickImageViewController: UIViewController, UIScrollViewDelegate, UINavigat
     }
 
     func showPickedImage(imageView: UIImageView){
-        
-        imageView.isHidden = false
-        
+
         let scaleWidth = scrollView.frame.size.width / (imageView.image?.size.width)!
         
         let scaleHeight = scrollView.frame.size.height / (imageView.image?.size.height)!
@@ -94,9 +92,11 @@ class PickImageViewController: UIViewController, UIScrollViewDelegate, UINavigat
         scrollView.zoomScale = minScale
         
         scrollView.contentInset.top = 40
-        
+
         scrollView.contentInset.left = 0
-    
+
+        imageView.isHidden = false
+
     }
 
     // keep image center after zooming
